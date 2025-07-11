@@ -64,16 +64,18 @@ jobs:
         shell: bash
         run: make detect-cpu | tee -a "$GITHUB_ENV"
 
-      # ⬇️ NEW: cap parallelism only for ubuntu-24.04-arm + Debug
-      - name: Limit parallelism on arm-Debug
+      # ───────────────────────────────────────────────────────────────
+      # EXTRA: keep the ubuntu-24.04-arm × Debug row inside 16 GB RAM
+      #        • BUILD_THREADS=1  → one compile at a time
+      #        • -g1              → smaller DWARF
+      #        • turn off Clang-Tidy to halve RAM again
+      # ───────────────────────────────────────────────────────────────
+      - name: Arm-Debug memory caps
         if: ${{ matrix.platform == 'ubuntu-24.04-arm' && matrix.build_type == 'Debug' }}
-        run: echo "BUILD_THREADS=2" >> "$GITHUB_ENV"
-
-      # ↓ turn OFF Clang-Tidy only on the same combo
-      - name: Extra CMake flags on arm-Debug
-        if: ${{ matrix.platform == 'ubuntu-24.04-arm' && matrix.build_type == 'Debug' }}
-        run: echo "EXTRA_CMAKE_FLAGS=-DFLS_ENABLE_CLANG_TIDY=OFF" >> "$GITHUB_ENV"
-
+        run: |
+          echo "BUILD_THREADS=1"                               >> "$GITHUB_ENV"
+          echo "CMAKE_CXX_FLAGS_DEBUG=-g1"                     >> "$GITHUB_ENV"
+          echo "EXTRA_CMAKE_FLAGS=-DFLS_ENABLE_CLANG_TIDY=OFF" >> "$GITHUB_ENV"
 
       - name: Install LLVM
         uses: ./.github/actions/install-llvm
