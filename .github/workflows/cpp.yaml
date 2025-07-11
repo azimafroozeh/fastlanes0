@@ -67,7 +67,7 @@ jobs:
       # ⬇️ NEW: cap parallelism only for ubuntu-24.04-arm + Debug
       - name: Limit parallelism on arm-Debug
         if: ${{ matrix.platform == 'ubuntu-24.04-arm' && matrix.build_type == 'Debug' }}
-        run: echo "BUILD_THREADS=4" >> "$GITHUB_ENV"
+        run: echo "BUILD_THREADS=2" >> "$GITHUB_ENV"
 
       - name: Install LLVM
         uses: ./.github/actions/install-llvm
