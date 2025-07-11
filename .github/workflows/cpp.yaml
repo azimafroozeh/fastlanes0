@@ -69,6 +69,12 @@ jobs:
         if: ${{ matrix.platform == 'ubuntu-24.04-arm' && matrix.build_type == 'Debug' }}
         run: echo "BUILD_THREADS=2" >> "$GITHUB_ENV"
 
+      # ↓ turn OFF Clang-Tidy only on the same combo
+      - name: Extra CMake flags on arm-Debug
+        if: ${{ matrix.platform == 'ubuntu-24.04-arm' && matrix.build_type == 'Debug' }}
+        run: echo "EXTRA_CMAKE_FLAGS=-DFLS_ENABLE_CLANG_TIDY=OFF" >> "$GITHUB_ENV"
+
+
       - name: Install LLVM
         uses: ./.github/actions/install-llvm
 
