@@ -97,7 +97,9 @@ jobs:
                 -DFLS_BUILD_SHARED_LIBS=${{ matrix.shared_lib }} \
                 -DFLS_ENABLE_INSTALL=OFF \
                 -DCMAKE_C_COMPILER=clang \
-                -DCMAKE_CXX_COMPILER=${{ matrix.cxx }}
+                -DCMAKE_CXX_COMPILER=${{ matrix.cxx }} \
+                ${EXTRA_CMAKE_FLAGS}
+
 
       - name: Build (clang-tidy runs automatically)
         run: cmake --build build_${{ matrix.build_type }}_${{ matrix.shared_lib }} -j $BUILD_THREADS
